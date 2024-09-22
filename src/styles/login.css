@@ -1,6 +1,6 @@
 .container {
     width: 100%;
-    max-width: 400px;
+    max-width: 350px;
     margin: 30px auto;
     display: flex;
     align-items: center;
@@ -8,8 +8,8 @@
     background-color: var(--tg-theme-secondary-bg-color);
     padding: 30px;
     border-radius: 10px;
-    border: 2px solid rgba(0,0,0,.4);
-    box-shadow: 0 0 20px 0 rgba(0,0,0,.2);
+    border: 2px solid rgba(0, 0, 0, .4);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, .2);
 }
 
 .title {
