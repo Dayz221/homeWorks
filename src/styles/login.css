@@ -6,7 +6,7 @@
     align-items: center;
     flex-direction: column;
     background-color: var(--tg-theme-secondary-bg-color);
-    padding: 30px;
+    padding: 30px 10px;
     border-radius: 10px;
     border: 2px solid rgba(0, 0, 0, .4);
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, .2);
@@ -17,4 +17,10 @@
     font-weight: 700;
     margin-bottom: 20px;
     color: var(--tg-theme-text-color);
+}
+
+@media screen and (width < 330px) {
+    .title {
+        font-size: 20px;
+    }
 }
