@@ -3,28 +3,32 @@ import '../styles/login.css'
 import { useEffect, useState } from 'react'
 import Loader from '../components/Loader/Loader'
 import axios from '../utils/axios.js'
+import { useNavigate } from 'react-router-dom'
 
 export default () => {
     const [isLoading, setIsLoading] = useState(true)
+    const navigate = useNavigate()
 
     useEffect(() => {
-        let user_data = {}
         if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
-            const user = window.Telegram.WebApp.initDataUnsafe.user;
-            console.log(user)
+            const data = window.Telegram.WebApp.initDataUnsafe;
+            console.log(data)
+            axios
+                .post("/auth/login", {
+                    telegramId: data.user.id,
+                    hash: data.hash
+                })
+                .then((res) => {
+                    window.localStorage.setItem("token", res.data.token)
+                    navigate("/")
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         } else {
             setIsLoading(false)
         }
     }, [])
-
-    // axios
-    //     .post("/auth/login", data)
-    //     .then((res) => {
-
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //     })
 
     return (
         <>
@@ -36,7 +40,18 @@ export default () => {
                     <LoginButton
                         botUsername="myHomeworkWithSiteBot"
                         onAuthCallback={(data) => {
-                            console.log(data)
+                            axios
+                                .post("/auth/login", {
+                                    telegramId: data.id,
+                                    hash: data.hash
+                                })
+                                .then((res) => {
+                                    window.localStorage.setItem("token", res.data.token)
+                                    navigate("/")
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
                         }}
                         buttonSize="large"
                         cornerRadius={20}
