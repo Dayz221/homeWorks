@@ -6,6 +6,7 @@ import Register from "./pages/register.jsx"
 export default () => {
   console.log(window.Telegram.WebApp.initDataUnsafe)
 
+    
   return (
       <Routes>
         <Route path="/login" element={<Login />} />
