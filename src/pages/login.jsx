@@ -9,22 +9,25 @@ export default () => {
     const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
 
+    const useLoginRequest = (user_id, hash) => {
+        axios
+        .post("/auth/login", {
+            telegramId: user_id,
+            hash
+        })
+        .then((res) => {
+            window.localStorage.setItem("token", res.data.token)
+            navigate('/')
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
     useEffect(() => {
         if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
             const data = window.Telegram.WebApp.initDataUnsafe;
-            console.log(data)
-            axios
-                .post("/auth/login", {
-                    telegramId: data.user.id,
-                    hash: data.hash
-                })
-                .then((res) => {
-                    window.localStorage.setItem("token", res.data.token)
-                    navigate("/")
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            useLoginRequest(data.user.id, data.hash)
         } else {
             setIsLoading(false)
         }
@@ -39,20 +42,7 @@ export default () => {
 
                     <LoginButton
                         botUsername="myHomeworkWithSiteBot"
-                        onAuthCallback={(data) => {
-                            axios
-                                .post("/auth/login", {
-                                    telegramId: data.id,
-                                    hash: data.hash
-                                })
-                                .then((res) => {
-                                    window.localStorage.setItem("token", res.data.token)
-                                    navigate("/")
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                        }}
+                        onAuthCallback={(data) => useLoginRequest(data.id, data.hash)}
                         buttonSize="large"
                         cornerRadius={20}
                         showAvatar={false}
