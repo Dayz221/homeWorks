@@ -9,7 +9,7 @@ export default () => {
     const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
 
-    const useLoginRequest = (data, user) => {
+    const loginRequest = (data, user) => {
         console.log(user)
         axios
         .post("/auth/login", data)
@@ -21,22 +21,24 @@ export default () => {
             console.log(err)
             navigate('/register')
         })
-        .finally(() => {
-            
-        })
     }
 
     useEffect(() => {
-        if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
-            const data = window.Telegram.WebApp.initDataUnsafe
-            useLoginRequest({
-                id: data.user.id,
-                type: "miniApp",
-                data: window.Telegram.WebApp.initData,
-            }, window.Telegram.WebApp.initDataUnsafe.user)
-        } else {
-            setIsLoading(false)
+        const f = async () => {
+            if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
+                const { allows_write_to_pm, language_code, ...userData } = window.Telegram.WebApp.initDataUnsafe.user;
+                userData.photo_url = await getUserProfilePhoto(process.env.BOT_TOKEN, userData.id) || "https://svgpng.ru/wp-content/uploads/2021/07/rectangle-300x300.jpg"
+
+                loginRequest({
+                    id: userData.id,
+                    type: "miniApp",
+                    data: window.Telegram.WebApp.initData,
+                }, userData)
+            } else {
+                setIsLoading(false)
+            }
         }
+        f()
     }, [])
 
     return (
@@ -51,7 +53,7 @@ export default () => {
                         onAuthCallback={(data) => {
                             // console.log(data)
                             const { auth_date, hash, ...userData } = data;
-                            useLoginRequest({
+                            loginRequest({
                                 id: data.id,
                                 type: "webApp",
                                 data
@@ -66,4 +68,24 @@ export default () => {
             </div>
         </>
     )
+}
+
+async function getUserProfilePhoto(botToken, userId) {
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/getUserProfilePhotos?user_id=${userId}`)
+    const data = await response.json()
+
+    if (data.total_count > 0) {
+        const photo = data.photos[0][0]
+        const fileId = photo.file_id
+
+        const fileResponse = await fetch(`https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`)
+        const fileData = await fileResponse.json()
+
+        const filePath = fileData.result.file_path
+        const photoUrl = `https://api.telegram.org/file/bot${botToken}/${filePath}`
+
+        return photoUrl;
+    } else {
+        return null;
+    }
 }
