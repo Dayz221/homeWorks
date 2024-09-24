@@ -11,4 +11,5 @@ export default () => {
         <Route path="*" element={<Main />} />
       </Routes>
   )
+
 }
