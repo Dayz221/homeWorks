@@ -27,17 +27,15 @@ export default () => {
         })
     }
 
-    const botToken = "7418386580:AAGfabRzlGwRS7nbj4w7ISZrSgQouzD7Msg"
-
     useEffect(() => {
         const f = async () => {
             if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
                 const { allows_write_to_pm, language_code, ...userData } = window.Telegram.WebApp.initDataUnsafe.user;
                 
-                const fileId = await getUserProfilePhotos(botToken, userData.id)
+                const fileId = await getUserProfilePhotos(process.env.TOKEN, userData.id)
 
                 if (fileId) {
-                    const fileUrl = await getFile(botToken, fileId)
+                    const fileUrl = await getFile(process.env.TOKEN, fileId)
                     userData.photo_url = fileUrl
                 } else {
                     userData.photo_url = "https://gb.ru/blog/wp-content/uploads/2022/07/gradienta-LeG68PrXA6Y-unsplash.jpg"
