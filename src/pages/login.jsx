@@ -27,7 +27,7 @@ export default () => {
             const data = window.Telegram.WebApp.initDataUnsafe;
             useLoginRequest({
                 hash: data.hash,
-                ...data.user
+                ...data
             })
         } else {
             setIsLoading(false)
