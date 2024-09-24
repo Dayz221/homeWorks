@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const instance = axios.create({
-    baseURL: process.env.API
+    baseURL: "https://home-work-api.ru/api"
 })
 
 instance.interceptors.request.use(config => {
