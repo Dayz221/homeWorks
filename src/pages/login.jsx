@@ -4,13 +4,17 @@ import { useEffect, useState } from 'react'
 import Loader from '../components/Loader/Loader'
 import axios from '../utils/axios.js'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../redux/slice.js'
 
 export default () => {
     const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const loginRequest = (data, user) => {
-        console.log(user)
+        // console.log(user)
+        dispatch(setUser(user))
         axios
         .post("/auth/login", data)
         .then((res) => {
@@ -18,7 +22,7 @@ export default () => {
             navigate('/')
         })
         .catch((err) => {
-            console.log(err)
+            // console.log(err)
             navigate('/register')
         })
     }
