@@ -1,15 +1,37 @@
-// import { useState } from 'react'
-// import Loader from '../components/Loader/Loader'
 import { useSelector } from 'react-redux'
 import '../styles/register.css'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import axios from '../utils/axios.js'
+import classNames from 'classnames'
 
 export default () => {
-    // const [isLoading, setIsLoading] = useState(true)
+    const navigate = useNavigate()
+
+    const [groupName, setGroupName] = useState("")
+    const [groupPassword, setGroupPassword] = useState("")
+
+    const [error, setError] = useState(false)
+
     const user = useSelector(state => state.user.user)
-    console.log(user)
     if (Object.keys(user).length == 0) {
         return <Navigate to="/login" />
+    }
+
+    const sendData = () => {
+        axios
+            .post("/auth/register", { groupName, groupPassword, ...user })
+            .then((res) => {
+                window.localStorage.setItem("token", res.data.token)
+                navigate('/')
+            })
+            .catch((err) => {
+                setError(true)
+            })
+    }
+
+    const clearErrors = () => {
+        setError(false)
     }
 
     return (
@@ -30,12 +52,18 @@ export default () => {
                     </div>
 
                     <div className="group_select__container">
-                        <input className="register_input" type="text" />
-                        <input className="register_input" type="password" />
+                        <input className={classNames("register_input", {err: error})} placeholder="Группа" type="text" value={groupName} onInput={(e) => {
+                                setGroupName(String(e.target.value).toUpperCase())
+                                clearErrors()
+                            }} />
+                        <input className={classNames("register_input", {err: error})} placeholder="Пароль" type="text" value={groupPassword} onInput={(e) => {
+                                setGroupPassword(e.target.value)
+                                clearErrors()
+                            }} />
                         
-                        <button className="send_button">
+                        <button className={classNames("send_button", {err: error})} onClick={() => sendData()}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M14 6L20 12M20 12L14 18M20 12H5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 6L20 12M20 12L14 18M20 12H5" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
                     </div>

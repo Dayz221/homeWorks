@@ -77,11 +77,21 @@
     border-color: var(--tg-theme-accent-text-color);
 }
 
+.register_input::placeholder {
+    font-weight: 400;
+    color: var(--tg-theme-hint-color)
+}
+
 .register_input:first-child {
     text-align: center;
     color: var(--tg-theme-accent-text-color);
     font-weight: 700;
     width: 65%;
+}
+
+.register_input.err {
+    border-color: var(--tg-theme-destructive-text-color);
+    color: var(--tg-theme-destructive-text-color);
 }
 
 .send_button {
@@ -113,4 +123,8 @@
 
 .send_button svg path {
     stroke: rgba(0, 0, 0, .5);
+}
+
+.send_button.err {
+    background-color: var(--tg-theme-destructive-text-color);
 }
