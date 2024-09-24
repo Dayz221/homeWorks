@@ -28,12 +28,8 @@ export default () => {
             console.log(window.Telegram.WebApp.initData)
             useLoginRequest({
                 id: data.user.id,
-                hash: data.hash,
-                auth_date: data.user.auth_date,
-                first_name: data.user.first_name,
-                last_name: data.user.last_name,
-                photo_url: data.user.photo_url,
-                username: data.user.username
+                type: "miniApp",
+                data: window.Telegram.WebApp.initData
             })
         } else {
             setIsLoading(false)
@@ -49,10 +45,11 @@ export default () => {
 
                     <LoginButton
                         botUsername="myHomeworkWithSiteBot"
-                        onAuthCallback={(data) => {
-                            console.log(data)
-                            useLoginRequest(data)
-                        }}
+                        onAuthCallback={(data) => useLoginRequest({
+                            id: data.id,
+                            type: "webApp",
+                            data
+                        })}
                         buttonSize="large"
                         cornerRadius={20}
                         showAvatar={false}
