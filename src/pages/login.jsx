@@ -26,8 +26,13 @@ export default () => {
         if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
             const data = window.Telegram.WebApp.initDataUnsafe;
             useLoginRequest({
+                id: data.user.id,
                 hash: data.hash,
-                ...data
+                auth_date: data.user.auth_date,
+                first_name: data.user.first_name,
+                last_name: data.user.last_name,
+                photo_url: data.user.photo_url,
+                username: data.user.username
             })
         } else {
             setIsLoading(false)
