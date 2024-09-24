@@ -23,13 +23,20 @@ export default () => {
         })
     }
 
+    const botToken = "7418386580:AAGfabRzlGwRS7nbj4w7ISZrSgQouzD7Msg"
+
     useEffect(() => {
         const f = async () => {
             if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
                 const { allows_write_to_pm, language_code, ...userData } = window.Telegram.WebApp.initDataUnsafe.user;
-                userData.photo_url = await getUserProfilePhoto("7418386580:AAGfabRzlGwRS7nbj4w7ISZrSgQouzD7Msg", userData.id)
-                if (userData.photo_url == null) {
-                    userData.photo_url = "https://svgpng.ru/wp-content/uploads/2021/07/rectangle-300x300.jpg"
+                
+                const fileId = await getUserProfilePhotos(botToken, userData.id)
+
+                if (fileId) {
+                    const fileUrl = await getFile(botToken, fileId)
+                    userData.photo_url = fileUrl
+                } else {
+                    userData.photo_url = "https://gb.ru/blog/wp-content/uploads/2022/07/gradienta-LeG68PrXA6Y-unsplash.jpg"
                 }
 
                 loginRequest({
@@ -73,22 +80,34 @@ export default () => {
     )
 }
 
-async function getUserProfilePhoto(botToken, userId) {
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/getUserProfilePhotos?user_id=${userId}`)
-    const data = await response.json()
+async function getUserProfilePhotos(botToken, userId) {
+    const url = `https://api.telegram.org/bot${botToken}/getUserProfilePhotos?user_id=${userId}`
 
-    if (data.total_count > 0) {
-        const photo = data.photos[0][0]
-        const fileId = photo.file_id
+    try {
+        const response = await axios.get(url)
+        const photos = response.data.result.photos
 
-        const fileResponse = await fetch(`https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`)
-        const fileData = await fileResponse.json()
+        if (photos.length > 0) {
+            const fileId = photos[0][0].file_id
+            return fileId
+        } else {
+            return null
+        }
+    } catch (error) {
+        console.error('Ошибка получения фотографий профиля:', error)
+    }
+}
 
-        const filePath = fileData.result.file_path
-        const photoUrl = `https://api.telegram.org/file/bot${botToken}/${filePath}`
+async function getFile(botToken, fileId) {
+    const url = `https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`
 
-        return photoUrl;
-    } else {
-        return null;
+    try {
+        const response = await axios.get(url)
+        const filePath = response.data.result.file_path
+        const fileUrl = `https://api.telegram.org/file/bot${botToken}/${filePath}`
+
+        return fileUrl
+    } catch (error) {
+        console.error('Ошибка получения файла:', error)
     }
 }
