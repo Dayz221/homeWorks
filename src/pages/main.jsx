@@ -14,7 +14,6 @@ export default () => {
     axios
       .get("/auth/me")
       .then((response) => {
-          console.log(response.data)
           dispatch(setUser(response.data.user))
       })
       .catch((err) => {

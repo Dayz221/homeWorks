@@ -9,25 +9,26 @@ export default () => {
     const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
 
-    const useLoginRequest = (user_id, hash) => {
+    const useLoginRequest = (data) => {
         axios
-        .post("/auth/login", {
-            telegramId: user_id,
-            hash
-        })
+        .post("/auth/login", data)
         .then((res) => {
             window.localStorage.setItem("token", res.data.token)
             navigate('/')
         })
         .catch((err) => {
             console.log(err)
+            navigate('/register')
         })
     }
 
     useEffect(() => {
         if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
             const data = window.Telegram.WebApp.initDataUnsafe;
-            useLoginRequest(data.user.id, data.hash)
+            useLoginRequest({
+                hash: data.hash,
+                ...data.user
+            })
         } else {
             setIsLoading(false)
         }
@@ -42,7 +43,10 @@ export default () => {
 
                     <LoginButton
                         botUsername="myHomeworkWithSiteBot"
-                        onAuthCallback={(data) => useLoginRequest(data.id, data.hash)}
+                        onAuthCallback={(data) => {
+                            console.log(data)
+                            useLoginRequest(data)
+                        }}
                         buttonSize="large"
                         cornerRadius={20}
                         showAvatar={false}
