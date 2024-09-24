@@ -11,10 +11,13 @@ export const userSlice = createSlice({
     reducers: {
         setUser(store, action) {
             store.user = action.payload
-            store.isLoggedIn = true
+        },
+
+        setIsLoggedIn(store, action) {
+            store.isLoggedIn = action.payload
         }
     }
 })
 
-export const  { setUser } = userSlice.actions
+export const { setUser, setIsLoggedIn } = userSlice.actions
 export default userSlice.reducer

@@ -9,7 +9,8 @@ export default () => {
     const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
 
-    const useLoginRequest = (data) => {
+    const useLoginRequest = (data, user) => {
+        console.log(user)
         axios
         .post("/auth/login", data)
         .then((res) => {
@@ -20,6 +21,9 @@ export default () => {
             console.log(err)
             navigate('/register')
         })
+        .finally(() => {
+            
+        })
     }
 
     useEffect(() => {
@@ -28,8 +32,8 @@ export default () => {
             useLoginRequest({
                 id: data.user.id,
                 type: "miniApp",
-                data: window.Telegram.WebApp.initData
-            })
+                data: window.Telegram.WebApp.initData,
+            }, window.Telegram.WebApp.initDataUnsafe.user)
         } else {
             setIsLoading(false)
         }
@@ -44,11 +48,15 @@ export default () => {
 
                     <LoginButton
                         botUsername="myHomeworkWithSiteBot"
-                        onAuthCallback={(data) => useLoginRequest({
-                            id: data.id,
-                            type: "webApp",
-                            data
-                        })}
+                        onAuthCallback={(data) => {
+                            // console.log(data)
+                            const { auth_date, hash, ...userData } = data;
+                            useLoginRequest({
+                                id: data.id,
+                                type: "webApp",
+                                data
+                            }, userData)
+                        }}
                         buttonSize="large"
                         cornerRadius={20}
                         showAvatar={false}
