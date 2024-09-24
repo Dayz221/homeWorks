@@ -25,6 +25,7 @@ export default () => {
     useEffect(() => {
         if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
             const data = window.Telegram.WebApp.initDataUnsafe;
+            console.log(window.Telegram.WebApp.initData)
             useLoginRequest({
                 id: data.user.id,
                 hash: data.hash,
