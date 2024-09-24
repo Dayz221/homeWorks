@@ -27,7 +27,7 @@ export default () => {
         const f = async () => {
             if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
                 const { allows_write_to_pm, language_code, ...userData } = window.Telegram.WebApp.initDataUnsafe.user;
-                userData.photo_url = await getUserProfilePhoto(process.env.BOT_TOKEN, userData.id) || "https://svgpng.ru/wp-content/uploads/2021/07/rectangle-300x300.jpg"
+                userData.photo_url = await getUserProfilePhoto("7418386580:AAGfabRzlGwRS7nbj4w7ISZrSgQouzD7Msg", userData.id) || "https://svgpng.ru/wp-content/uploads/2021/07/rectangle-300x300.jpg"
 
                 loginRequest({
                     id: userData.id,

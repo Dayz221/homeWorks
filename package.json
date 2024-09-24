@@ -17,7 +17,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set BOT_TOKEN=\"7418386580:AAGfabRzlGwRS7nbj4w7ISZrSgQouzD7Msg\" && set PORT=80 && react-scripts start",
+    "start": "set PORT=80 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
