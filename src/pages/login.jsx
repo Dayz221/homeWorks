@@ -32,10 +32,10 @@ export default () => {
             if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
                 const { allows_write_to_pm, language_code, ...userData } = window.Telegram.WebApp.initDataUnsafe.user;
                 
-                const fileId = await getUserProfilePhotos(process.env.BOT_TOKEN, userData.id)
+                const fileId = await getUserProfilePhotos(process.env.REACT_APP_BOT_TOKEN, userData.id)
 
                 if (fileId) {
-                    const fileUrl = await getFile(process.env.BOT_TOKEN, fileId)
+                    const fileUrl = await getFile(process.env.REACT_APP_BOT_TOKEN, fileId)
                     userData.photo_url = fileUrl
                 } else {
                     userData.photo_url = "https://gb.ru/blog/wp-content/uploads/2022/07/gradienta-LeG68PrXA6Y-unsplash.jpg"
@@ -96,7 +96,7 @@ async function getUserProfilePhotos(botToken, userId) {
             return null
         }
     } catch (error) {
-        console.error('Ошибка получения фотографий профиля:', error)
+        console.error('Ошибка получения id фоторграфии')
     }
 }
 
@@ -110,6 +110,6 @@ async function getFile(botToken, fileId) {
 
         return fileUrl
     } catch (error) {
-        console.error('Ошибка получения файла:', error)
+        console.error('Ошибка получения файла фоторграфии')
     }
 }
