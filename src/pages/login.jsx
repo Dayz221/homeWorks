@@ -13,7 +13,7 @@ export default () => {
     const dispatch = useDispatch()
 
     const loginRequest = (data, user) => {
-        console.log(user)
+        // console.log(user)
         dispatch(setUser(user))
         axios
         .post("/auth/login", data)
@@ -22,7 +22,7 @@ export default () => {
             navigate('/')
         })
         .catch((err) => {
-            console.log(err)
+            // console.log(err)
             navigate('/register')
         })
     }
