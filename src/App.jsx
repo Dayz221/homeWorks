@@ -4,6 +4,9 @@ import Login from "./pages/login.jsx"
 import Register from "./pages/register.jsx"
 
 export default () => {
+
+  window.Telegram.WebApp.expand()
+
   return (
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -11,5 +14,4 @@ export default () => {
         <Route path="*" element={<Main />} />
       </Routes>
   )
-
 }
