@@ -2,6 +2,7 @@ import axios from "../utils/axios.js"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { setIsLoggedIn, setUser, setTasks } from '../redux/slice.js'
+import Popup from "../components/Popup/Popup.jsx"
 
 import '../styles/main.css'
 import { useEffect, useState } from "react"
@@ -14,6 +15,7 @@ export default () => {
   const isLoggedIn = useSelector(state => state.user.isLoggedIn)
   const user = useSelector(state => state.user.user)
   const tasks = useSelector(state => state.user.tasks)
+  const [newTaskPopup, setNewTaskPopup] = useState(false)
 
   const [renderType, setRenderType] = useState(0)
 
@@ -48,6 +50,11 @@ export default () => {
   }
 
   return (
+    <>
+      <Popup isActive={newTaskPopup} closeCallback={setNewTaskPopup}>
+
+      </Popup>
+
       <div className="body_container">
           <div className="main_menu">
             <div className="user_info_container">
@@ -81,15 +88,32 @@ export default () => {
 
           {
             renderType == 0 ?
-              <div className="tasks__container">
-                {tasks.map(el => {
-                  return <Task task={el} key={el._id}/>
-                })}
+              <div className="all_tasks_page">
+                <div className="all_tasks_menu">
+                  <div className="tasks_filters">Фильтры</div>
+                
+                  <button className="create_new_task_button" onClick={() => setNewTaskPopup(true)}>
+                    <div className="create_new_task_text">Создать</div>
+                    <div className="create_new_task_icon">
+                      <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 3.75L7.5 11.25" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M11.25 7.5L3.75 7.5" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                  </button>
+                
+                </div>
+                <div className="tasks__container">
+                  {tasks.map(el => {
+                    return <Task task={el} key={el._id}/>
+                  })}
+                </div>
               </div>
               :
               <div>Календарь</div>
           }
 
       </div>
+    </>
   )
 }
