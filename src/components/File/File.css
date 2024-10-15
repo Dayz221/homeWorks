@@ -1,0 +1,42 @@
+.file__container {
+    /* max-width: 250px; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--tg-theme-bg-color);
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.file_name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100%-40px);
+    overflow: hidden;
+    font-size: 13px;
+    color: var(--tg-theme-text-color);
+}
+
+.delete_file,
+.save_file {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.delete_file svg path {
+    fill: var(--tg-theme-destructive-text-color);
+}
+
+.delete_file:hover svg path {
+    fill: var(--tg-theme-destructive-text-color);
+    filter: brightness(70%);
+}
+
+.save_file svg path {
+    fill: var(--tg-theme-hint-color);
+}

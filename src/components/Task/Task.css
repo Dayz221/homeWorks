@@ -75,6 +75,7 @@
     padding: 12px;
     border-radius: 15px;
     margin-top: 15px;
+    white-space: pre-wrap;
 }
 
 .task_description__text {
@@ -98,7 +99,7 @@ input[type="checkbox"] {
     position: relative;
 }
 
-input[type="checkbox"]+label::after {
+.taskStatusCheckbox input[type="checkbox"]+label::after {
     content: "";
     position: absolute;
     top: 0;
@@ -110,11 +111,11 @@ input[type="checkbox"]+label::after {
     user-select: none;
 }
 
-input[type="checkbox"]:checked+label::after {
+.taskStatusCheckbox input[type="checkbox"]:checked+label::after {
     border-color: var(--tg-theme-button-color);
 }
 
-input[type="checkbox"]:checked+label::before {
+.taskStatusCheckbox input[type="checkbox"]:checked+label::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -145,4 +146,12 @@ input[type="checkbox"]:checked+label::before {
 
 .patch_task:hover svg path {
     fill: var(--tg-theme-button-color)
+}
+
+.task_files__container {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, auto));
+    cursor:auto;
 }

@@ -26,8 +26,13 @@ export const userSlice = createSlice({
         setTaskStatus(store, action) {
             store.tasks.find(el => el.utask_id === action.payload.utask_id).isCompleted = action.payload.status
         },
+
+        deleteFile(store, action) {
+            const task = store.tasks.find(el => el._id === action.payload.task_id)
+            task.files = task.files.filter(el => el._id !== action.payload.file_id)
+        }
     }
 })
 
-export const { setUser, setIsLoggedIn, setTasks, setTaskStatus } = userSlice.actions
+export const { setUser, setIsLoggedIn, setTasks, setTaskStatus, deleteFile } = userSlice.actions
 export default userSlice.reducer
