@@ -2,34 +2,20 @@ import axios from "../utils/axios.js"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { setIsLoggedIn, setUser, setTasks } from '../redux/slice.js'
-import Popup from "../components/Popup/Popup.jsx"
 
 import '../styles/main.css'
 import { useEffect, useState } from "react"
 import classNames from "classnames"
 import Task from "../components/Task/Task.jsx"
+import NewTaskPopup from "../components/Popups/NewTaskPopup.js"
 
 export default () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const isLoggedIn = useSelector(state => state.user.isLoggedIn)
-  const user = useSelector(state => state.user.user)
   const tasks = useSelector(state => state.user.tasks)
+  
   const [newTaskPopup, setNewTaskPopup] = useState(false)
-  const [patchTaskPopup, setPatchTaskPopup] = useState(false)
-  const [isErr, setIsErr] = useState(false)
-  const [isDisabled, setIsDisabled] = useState(false)
-  const [currentPatchTaskId, setCurrentPatchTaskId] = useState("")
-
-  const [newTaskData, setNewTaskData] = useState({
-    subject: "",
-    type: "",
-    description: "",
-    deadline: new Date().getTime(),
-    isGroupTask: false,
-    files: []
-  })
-
   const [renderType, setRenderType] = useState(0)
 
   if (!isLoggedIn) {
@@ -44,203 +30,27 @@ export default () => {
       })    
   }
 
-  const getTasks = () => {
+  useEffect(() => {
     axios
       .get("/tasks/get_tasks")
       .then((response) => {
           dispatch(setTasks(response.data.tasks))
         })
       .catch((err) => {})
-  }
+  }, [])
 
-  useEffect(() => getTasks(), [])
+  // const numOfCompletedTasks = tasks.filter(el => el.isCompleted).length
 
-  useEffect(() => setIsErr(false), [newTaskData])
-
-  const numOfCompletedTasks = tasks.filter(el => el.isCompleted).length
-
-  const getGradient = (r1, g1, b1, r2, g2, b2, k) => {
-    const r = r1 + (r2-r1)*k
-    const g = g1 + (g2-g1)*k
-    const b = b1 + (b2-b1)*k
-    return `${r},${g},${b}`
-  }
-
-  const openNewTaskPopup = () => {
-    const oneDayInMillis = 1000*60*60*24
-    setNewTaskData({
-      subject: "",
-      type: "",
-      description: "",
-      deadline: Math.floor((new Date().getTime() + 7*oneDayInMillis) / oneDayInMillis) * oneDayInMillis,
-      isGroupTask: user.permissions > 1,
-      files: []
-    })
-    setNewTaskPopup(true)
-    setIsDisabled(false)
-  }
-
-  const openEditPopup = (task) => {
-    setNewTaskData({
-      subject: task.subject,
-      type: task.type,
-      description: task.description,
-      deadline: task.deadline,
-      isGroupTask: task.isGroupTask,
-      files: []
-    })
-    setCurrentPatchTaskId(task._id)
-    setPatchTaskPopup(true)
-    setIsDisabled(false)
-  }
-
-  const createNewTask = async () => {
-    const {files, ...taskData} = newTaskData
-    setIsDisabled(true)
-    
-    try {
-      const taskResponse = await axios.post('/tasks/create_task', taskData)
-
-      for(const file of files) {
-        const formData = new FormData()
-        formData.append('file', file)
-        try {
-          await axios.post(`/files/upload_file/${taskResponse.data.task._id}`, formData)
-        } catch (error) {}
-      }
-
-      getTasks()
-      setNewTaskPopup(false)
-    } catch {
-      setIsErr(true)
-      setIsDisabled(false)
-    }
-  }
-
-  const patchTask = async () => {
-    const {files, ...taskData} = newTaskData
-    setIsDisabled(true)
-    
-    try {
-      const taskResponse = await axios.patch(`/tasks/patch_task/${currentPatchTaskId}`, taskData)
-
-      for(const file of files) {
-        const formData = new FormData()
-        formData.append('file', file)
-        try {
-          await axios.post(`/files/upload_file/${taskResponse.data.task._id}`, formData)
-        } catch (error) {}
-      }
-
-      getTasks()
-      setPatchTaskPopup(false)
-    } catch {
-      setIsErr(true)
-      setIsDisabled(false)
-    }
-  }
-
-  const deleteTask = async () => {
-    if (window.confirm("Вы уверены, что хотите удалить задание?")) {
-      try {
-        await axios.delete(`/tasks/delete_task/${currentPatchTaskId}`)
-        getTasks()
-      } catch {}
-
-      setPatchTaskPopup(false)
-    }
-  }
-
-  const dateToString = (num) => {
-    const date = new Date(num)
-    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, 0)}-${String(date.getDate()).padStart(2, 0)}`
-  }
-
-  const stringToDate = (str) => {
-    const date = String(str).split("-")
-    return new Date(date[0], date[1]-1, date[2]).getTime()
-  }
+  // const getGradient = (r1, g1, b1, r2, g2, b2, k) => {
+  //   const r = r1 + (r2-r1)*k
+  //   const g = g1 + (g2-g1)*k
+  //   const b = b1 + (b2-b1)*k
+  //   return `${r},${g},${b}`
+  // }
 
   return (
     <>
-      <Popup isActive={newTaskPopup} closeCallback={setNewTaskPopup} title="Новое задание" >
-        <div style={{position: "relative"}}>
-          <input type="text" className="input" id="reg__task_subject" value={newTaskData.subject} onChange={e => setNewTaskData({...newTaskData, subject: e.target.value})} />
-          <label htmlFor="reg__task_subject">Предмет</label>
-        </div>
-
-        <div style={{position: "relative"}}>
-          <input type="text" className="input" id="reg__task_type" value={newTaskData.type} onChange={e => setNewTaskData({...newTaskData, type: e.target.value})} />
-          <label htmlFor="reg__task_type">Тип задания</label>
-        </div>
-        
-        <div style={{position: "relative"}}>
-          <input type="date" className="input" id="reg__task_date" value={dateToString(newTaskData.deadline)} onChange={e => setNewTaskData({...newTaskData, deadline: stringToDate(e.target.value)})} />
-          <label htmlFor="reg__task_date">Дедлайн</label>
-        </div>
-        
-        {
-          user.permissions > 1 ?
-            <div className="is_group_task__container">
-              <label className="checkbox_label">Групповое задание</label>
-              <div className="is_group_checkbox">
-                <input type="checkbox" id="new_task_is_group" checked={newTaskData.isGroupTask} onChange={e => setNewTaskData({...newTaskData, isGroupTask: e.target.checked})} />
-                <label htmlFor="new_task_is_group"></label>
-              </div>
-            </div>
-            : <></>
-        }
-
-        <div style={{position: "relative"}}>
-          <div className="textarea__container">
-            <textarea rows="5" type="text" id="reg__task_description" value={newTaskData.description} onChange={e => setNewTaskData({...newTaskData, description: e.target.value})}></textarea>
-          </div>
-          <label htmlFor="reg__task_description">Описание</label>
-        </div>
-
-        <div style={{position: "relative"}}>
-          <input type="file" id="reg__task_files" multiple onChange={e => setNewTaskData({...newTaskData, files: e.target.files})} />
-          <label htmlFor="reg__task_files">{"Файлов: " + newTaskData.files.length}</label>
-        </div>
-
-        <div className="form_separator"></div>
-        
-        <button className={classNames("submit_button", {err: isErr, disabled: isDisabled})} onClick={createNewTask} disabled={isDisabled}>Создать</button>
-      </Popup>
-
-      <Popup isActive={patchTaskPopup} closeCallback={setPatchTaskPopup} title="Изменить задание" >
-        <div style={{position: "relative"}}>
-          <input type="text" className="input" id="reg__task_subject" value={newTaskData.subject} onChange={e => setNewTaskData({...newTaskData, subject: e.target.value})} />
-          <label htmlFor="reg__task_subject">Предмет</label>
-        </div>
-
-        <div style={{position: "relative"}}>
-          <input type="text" className="input" id="reg__task_type" value={newTaskData.type} onChange={e => setNewTaskData({...newTaskData, type: e.target.value})} />
-          <label htmlFor="reg__task_type">Тип задания</label>
-        </div>
-        
-        <div style={{position: "relative"}}>
-          <input type="date" className="input" id="reg__task_date" value={dateToString(newTaskData.deadline)} onChange={e => setNewTaskData({...newTaskData, deadline: stringToDate(e.target.value)})} />
-          <label htmlFor="reg__task_date">Дедлайн</label>
-        </div>
-
-        <div style={{position: "relative"}}>
-          <div className="textarea__container">
-            <textarea rows="5" type="text" id="reg__task_description" value={newTaskData.description} onChange={e => setNewTaskData({...newTaskData, description: e.target.value})}></textarea>
-          </div>
-          <label htmlFor="reg__task_description">Описание</label>
-        </div>
-
-        <div style={{position: "relative"}}>
-          <input type="file" id="reg__task_files" multiple onChange={e => setNewTaskData({...newTaskData, files: e.target.files})} />
-          <label htmlFor="reg__task_files">{"Добавить файлы: " + newTaskData.files.length}</label>
-        </div>
-
-        <div className="form_separator"></div>
-        
-        <button className={classNames("submit_button", {err: isErr, disabled: isDisabled})} onClick={patchTask} disabled={isDisabled}>Изменить</button>
-        <div className="delete_task" onClick={deleteTask}>Удалить задание</div>
-      </Popup>
+      <NewTaskPopup isActive={newTaskPopup} setActive={setNewTaskPopup}/>
 
       <div className="body_container">
           {/* <div className="main_menu">
@@ -282,7 +92,7 @@ export default () => {
                 <div className="all_tasks_menu">
                   <div className="tasks_filters">Фильтры</div>
                 
-                  <button className="create_new_task_button" onClick={openNewTaskPopup}>
+                  <button className="create_new_task_button" onClick={() => setNewTaskPopup(true)}>
                     <div className="create_new_task_text">Создать</div>
                     <div className="create_new_task_icon">
                       <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -301,12 +111,12 @@ export default () => {
                 }
                 <div className="tasks__container">
                   {[...tasks].sort((a, b) => a.deadline-b.deadline).map(el => {
-                    return <Task openEditPopupCallback={openEditPopup} task={el} key={el._id}/>
+                    return <Task task={el} key={el._id}/>
                   })}
                 </div>
               </div>
               :
-              <div style={{margin: "20px 0", textAlign: "center"}}>Эта страничка жестко разрабатывается...</div>
+              <div style={{margin: "20px 0", textAlign: "center", color: "var(--tg-theme-text-color)" }}>Эта страничка жестко разрабатывается...</div>
           }
 
       </div>

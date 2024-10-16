@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-import axios from '../utils/axios.js'
 
 const initialState = {
     isLoggedIn: false,
@@ -23,6 +22,18 @@ export const userSlice = createSlice({
             store.tasks = action.payload
         },
 
+        addTask(store, action) {
+            store.tasks.push(action.payload)
+        },
+
+        patchTask(store, action) {
+            store.tasks = store.tasks.map(task => (task._id === action.payload._id) ? action.payload : task)
+        },
+
+        deleteTask(store, action) {
+            store.tasks = store.tasks.filter(el => el._id !== action.payload)
+        },
+
         setTaskStatus(store, action) {
             store.tasks.find(el => el.utask_id === action.payload.utask_id).isCompleted = action.payload.status
         },
@@ -34,5 +45,5 @@ export const userSlice = createSlice({
     }
 })
 
-export const { setUser, setIsLoggedIn, setTasks, setTaskStatus, deleteFile } = userSlice.actions
+export const { setUser, setIsLoggedIn, setTasks, setTaskStatus, deleteFile, addTask, patchTask, deleteTask } = userSlice.actions
 export default userSlice.reducer
