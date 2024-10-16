@@ -110,7 +110,7 @@ export default () => {
                   <></>
                 }
                 <div className="tasks__container">
-                  {[...tasks].sort((a, b) => a.deadline-b.deadline).map(el => {
+                  {[...tasks].filter(el => el.deadline > new Date().getTime()-24*60*60*1000).sort((a, b) => a.deadline-b.deadline).map(el => {
                     return <Task task={el} key={el._id}/>
                   })}
                 </div>
