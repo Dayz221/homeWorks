@@ -81,7 +81,7 @@
 .task_description__text {
     display: block;
     font-size: 15px;
-    color: var(--tg-theme-hint-color);
+    color: var(--tg-theme-text-color);
 }
 
 input[type="checkbox"] {
