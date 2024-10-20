@@ -1,7 +1,7 @@
 import axios from "../utils/axios.js"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { setIsLoggedIn, setUser, setTasks } from '../redux/slice.js'
+import { setIsLoggedIn, setUser, setTasks, setEdits } from '../redux/slice.js'
 
 import '../styles/main.css'
 import { useEffect, useState } from "react"
@@ -14,7 +14,9 @@ export default () => {
   const navigate = useNavigate()
   const isLoggedIn = useSelector(state => state.user.isLoggedIn)
   const tasks = useSelector(state => state.user.tasks)
-  
+
+  const edits = useSelector(state => state.user.edits)
+
   const [newTaskPopup, setNewTaskPopup] = useState(false)
   const [renderType, setRenderType] = useState(0)
 
@@ -30,14 +32,28 @@ export default () => {
       })    
   }
 
-  useEffect(() => {
+  const getTasks = () => {
     axios
       .get("/tasks/get_tasks")
       .then((response) => {
           dispatch(setTasks(response.data.tasks))
+          dispatch(setEdits(response.data.edits))
+          console.log(response.data)
         })
       .catch((err) => {})
-  }, [])
+  }
+
+  const [flag, setFlag] = useState(false)
+  useEffect(() => {
+    axios
+      .get('/tasks/get_edits')
+      .then((res) => {
+        if (res.data.edits > edits) getTasks()
+      })
+      .catch(err => {})
+
+    setTimeout(() => setFlag(!flag), 1000)
+  }, [flag])
 
   // const numOfCompletedTasks = tasks.filter(el => el.isCompleted).length
 

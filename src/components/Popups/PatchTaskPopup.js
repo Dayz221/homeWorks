@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import classNames from "classnames"
 import axios from "../../utils/axios.js"
 import { useDispatch } from "react-redux"
-import { patchTask, deleteTask } from "../../redux/slice.js"
+import { patchTask, deleteTask, setIsUploading } from "../../redux/slice.js"
 
 export default ({ isActive, setActive, task }) => {
     const dispatch = useDispatch()
@@ -58,7 +58,7 @@ export default ({ isActive, setActive, task }) => {
                         patchedTask.files.push({ name: fileResponse.data.file.name, _id: fileResponse.data.file._id })
                     } catch (error) { }
                 }
-
+                
                 dispatch(patchTask(patchedTask))
                 setActive(false)
             } catch (err) {
