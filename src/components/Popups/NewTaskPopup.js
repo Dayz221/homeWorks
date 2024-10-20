@@ -66,7 +66,6 @@ export default ({ isActive, setActive }) => {
                 }
                 
                 dispatch(addTask(newTask))
-                console.log(newTask)
                 setActive(false)
             } catch {
                 setIsErr(true)

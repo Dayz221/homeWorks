@@ -48,8 +48,6 @@ export default () => {
   //   return `${r},${g},${b}`
   // }
 
-  console.log([...tasks])
-
   return (
     <>
       <NewTaskPopup isActive={newTaskPopup} setActive={setNewTaskPopup}/>

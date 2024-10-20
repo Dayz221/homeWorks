@@ -1,5 +1,5 @@
 html {
-    --tg-theme-accent-text-color: #C3AAFF;
+    /* --tg-theme-accent-text-color: #C3AAFF;
     --tg-theme-bg-color: #1E1E1E;
     --tg-theme-bottom-bar-bg-color: #252526;
     --tg-theme-button-color: #8753FF;
@@ -13,7 +13,24 @@ html {
     --tg-theme-section-header-text-color: #C3AAFF;
     --tg-theme-section-separator-color: #131313;
     --tg-theme-subtitle-text-color: #82868a;
-    --tg-theme-text-color: #ddd;
+    --tg-theme-text-color: #ddd; */
+
+    --tg-theme-accent-text-color: #79e8d9;
+    --tg-color-scheme: dark;
+    --tg-theme-bg-color: #282e33;
+    --tg-theme-bottom-bar-bg-color: #282e33;
+    --tg-theme-button-color: #3fc1b0;
+    --tg-theme-button-text-color: #ffffff;
+    --tg-theme-destructive-text-color: #f57474;
+    --tg-theme-header-bg-color: #282e33;
+    --tg-theme-hint-color: #82868a;
+    --tg-theme-link-color: #4be1c3;
+    --tg-theme-secondary-bg-color: #313b43;
+    --tg-theme-section-bg-color: #282e33;
+    --tg-theme-section-header-text-color: #4be1c3;
+    --tg-theme-section-separator-color: #242a2e;
+    --tg-theme-subtitle-text-color: #82868a;
+    --tg-theme-text-color: #f5f5f5;
 
     background-color: var(--tg-theme-bg-color);
 }

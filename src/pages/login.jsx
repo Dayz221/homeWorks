@@ -13,7 +13,6 @@ export default () => {
     const dispatch = useDispatch()
 
     const loginRequest = (data, user) => {
-        // console.log(user)
         dispatch(setUser(user))
         axios
         .post("/auth/login", data)
@@ -22,7 +21,6 @@ export default () => {
             navigate('/')
         })
         .catch((err) => {
-            // console.log(err)
             navigate('/register')
         })
     }
@@ -63,7 +61,6 @@ export default () => {
                     <LoginButton
                         botUsername={process.env.REACT_APP_BOT_NAME}
                         onAuthCallback={(data) => {
-                            // console.log(data)
                             const { auth_date, hash, ...userData } = data;
                             loginRequest({
                                 id: data.id,
