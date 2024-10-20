@@ -38,7 +38,6 @@ export default () => {
       .then((response) => {
           dispatch(setTasks(response.data.tasks))
           dispatch(setEdits(response.data.edits))
-          console.log(response.data)
         })
       .catch((err) => {})
   }
