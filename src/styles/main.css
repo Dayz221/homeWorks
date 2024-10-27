@@ -391,3 +391,27 @@ input[type="file"]+label:hover {
     border-radius: 15px;
     color: var(--tg-theme-text-color)
 }
+
+.tasks_filters {
+    padding: 4px 6px;
+    border-radius: 15px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    display: flex;
+    gap: 5px;
+}
+
+.filter_item {
+    padding: 6px 10px;
+    border-radius: 15px;
+    background-color: transparent;
+    border: 2px solid transparent;
+    transition: all .3s;
+    cursor: pointer;
+    color: var(--tg-theme-text-color);
+    font-size: 15px;
+}
+
+.filter_item.active {
+    border-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-accent-text-color)
+}

@@ -19,6 +19,7 @@ export default () => {
 
   const [newTaskPopup, setNewTaskPopup] = useState(false)
   const [renderType, setRenderType] = useState(0)
+  const [activeFilter, setActiveFilter] = useState(1)
 
   if (!isLoggedIn) {
     axios
@@ -40,6 +41,14 @@ export default () => {
           dispatch(setEdits(response.data.edits))
         })
       .catch((err) => {})
+  }
+
+  const prepareTasks = (filter) => {
+    if (filter == 0) {
+      return [...tasks].sort((a, b) => b.deadline-a.deadline)
+    } else if (filter == 1) {
+      return [...tasks].filter(el => el.deadline > new Date().getTime()-24*60*60*1000).sort((a, b) => a.deadline-b.deadline)
+    }
   }
 
   const [flag, setFlag] = useState(false)
@@ -105,7 +114,14 @@ export default () => {
             renderType == 0 ?
               <div className="all_tasks_page">
                 <div className="all_tasks_menu">
-                  <div className="tasks_filters">Фильтры</div>
+                  <div className="tasks_filters">
+                    <div className={classNames("filter_item", {active: activeFilter == 0})} onClick={() => setActiveFilter(0)}>
+                      Все
+                    </div>
+                    <div className={classNames("filter_item", {active: activeFilter == 1})} onClick={() => setActiveFilter(1)}>
+                      Предстоящие
+                    </div>
+                  </div>
                 
                   <button className="create_new_task_button" onClick={() => setNewTaskPopup(true)}>
                     <div className="create_new_task_text">Создать</div>
@@ -125,13 +141,15 @@ export default () => {
                   <></>
                 }
                 <div className="tasks__container">
-                  {[...tasks].filter(el => el.deadline > new Date().getTime()-24*60*60*1000).sort((a, b) => a.deadline-b.deadline).map(el => {
+                  { prepareTasks(activeFilter).map(el => {
                     return <Task task={el} key={el._id}/>
                   })}
                 </div>
               </div>
               :
-              <div style={{margin: "20px 0", textAlign: "center", color: "var(--tg-theme-text-color)" }}>Эта страничка жестко разрабатывается...</div>
+              <div style={{textAlign: "center", color: "var(--tg-theme-text-color)", fontSize: "18px", marginTop:"20px"}} className="file_manager_page">
+                Файловый менеджер жестко разрабатывается...
+              </div>
           }
 
       </div>
