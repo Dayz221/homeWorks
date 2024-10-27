@@ -65,7 +65,7 @@ export default ({task}) => {
                     <div style={{minHeight: "0"}}>
                         <div className="task_description" onClick={e => e.stopPropagation()}>
                             <div className="task_description__text">
-                                { task.description
+                                { !!task.description
                                     ? task.description
                                     : "Нет описания"
                                 }
@@ -73,15 +73,15 @@ export default ({task}) => {
                         </div>
                         {
                             task.files.length > 0 ?
-                                <div className="task_files__container" onClick={e => e.stopPropagation()}>
-                                    {
-                                        task.files.map(file => {
-                                            return <File editMode={(!task.isGroupTask) || (task.isGroupTask && user.permissions > 1)} task_id={task._id} file={file} key={file._id}/>
-                                        })
-                                    }
-                                </div>
-                                :
-                                <></>
+                            <div className="task_files__container" onClick={e => e.stopPropagation()}>
+                                {
+                                    task.files.map(file => {
+                                        return <File editMode={(!task.isGroupTask) || (task.isGroupTask && user.permissions > 1)} task_id={task._id} file={file} key={file._id}/>
+                                    })
+                                }
+                            </div>
+                            :
+                            <></>
                         }
                     </div>
                 </div>

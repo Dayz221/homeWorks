@@ -51,7 +51,7 @@ export default () => {
       })
       .catch(err => {})
 
-    setTimeout(() => setFlag(!flag), 1000)
+    setTimeout(() => setFlag(!flag), 30000)
   }, [flag])
 
   // const numOfCompletedTasks = tasks.filter(el => el.isCompleted).length
