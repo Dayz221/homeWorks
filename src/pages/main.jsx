@@ -98,7 +98,7 @@ export default () => {
           <div className="render_type">
             <div className={classNames("render_type__item", {active: renderType==0})} onClick={() => setRenderType(0)}>Все задания</div>
             <div className="render_type__item">|</div>
-            <div className={classNames("render_type__item", {active: renderType==1})} onClick={() => setRenderType(1)}>Календарь</div>
+            <div className={classNames("render_type__item", {active: renderType==1})} onClick={() => setRenderType(1)}>Файлы</div>
           </div>
 
           {
