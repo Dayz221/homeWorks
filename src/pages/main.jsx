@@ -7,19 +7,26 @@ import '../styles/main.css'
 import { useEffect, useState } from "react"
 import classNames from "classnames"
 import Task from "../components/Task/Task.jsx"
-import NewTaskPopup from "../components/Popups/NewTaskPopup.js"
+import NewTaskPopup from "../components/Popups/NewTaskPopup.jsx"
+import Folder from "../components/Folder/Folder.jsx"
+import FM_File from "../components/FM_File/FM_File.jsx"
+import NewElementPopup from "../components/Popups/NewElementPopup.jsx"
 
 export default () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const isLoggedIn = useSelector(state => state.user.isLoggedIn)
   const tasks = useSelector(state => state.user.tasks)
+  const user = useSelector(state => state.user.user)
 
   const edits = useSelector(state => state.user.edits)
 
   const [newTaskPopup, setNewTaskPopup] = useState(false)
+  const [newElementPopup, setNewElementPopup] = useState(false)
   const [renderType, setRenderType] = useState(0)
   const [activeFilter, setActiveFilter] = useState(1)
+
+  const [curFolder, setCurFolder] = useState({})
 
   if (!isLoggedIn) {
     axios
@@ -33,6 +40,15 @@ export default () => {
       })    
   }
 
+  useEffect(() => {
+    axios
+    .get("/get_group_folder")
+    .then((response) => {
+        setCurFolder(response.data.folder)
+      })
+    .catch((err) => {})
+  }, [])
+
   const getTasks = () => {
     axios
       .get("/tasks/get_tasks")
@@ -43,10 +59,19 @@ export default () => {
       .catch((err) => {})
   }
 
+  const getFolder = (folder_id) => {
+    axios
+      .get(`/files/get_folder/${folder_id}`)
+      .then(res => {
+        setCurFolder(res.data.folder)
+      })
+      .catch(err => {})
+  }
+
   const prepareTasks = (filter) => {
-    if (filter == 0) {
+    if (filter === 0) {
       return [...tasks].sort((a, b) => b.deadline-a.deadline)
-    } else if (filter == 1) {
+    } else if (filter === 1) {
       return [...tasks].filter(el => el.deadline > new Date().getTime()-24*60*60*1000).sort((a, b) => a.deadline-b.deadline)
     }
   }
@@ -75,6 +100,7 @@ export default () => {
   return (
     <>
       <NewTaskPopup isActive={newTaskPopup} setActive={setNewTaskPopup}/>
+      <NewElementPopup isActive={newElementPopup} setActive={setNewElementPopup} curFolder={curFolder} getFolder={getFolder} />
 
       <div className="body_container">
           {/* <div className="main_menu">
@@ -105,20 +131,20 @@ export default () => {
           </div> */}
 
           <div className="render_type">
-            <div className={classNames("render_type__item", {active: renderType==0})} onClick={() => setRenderType(0)}>Все задания</div>
+            <div className={classNames("render_type__item", {active: renderType===0})} onClick={() => setRenderType(0)}>Все задания</div>
             <div className="render_type__item">|</div>
-            <div className={classNames("render_type__item", {active: renderType==1})} onClick={() => setRenderType(1)}>Файлы</div>
+            <div className={classNames("render_type__item", {active: renderType===1})} onClick={() => setRenderType(1)}>Файлы</div>
           </div>
 
           {
-            renderType == 0 ?
+            renderType === 0 ?
               <div className="all_tasks_page">
                 <div className="all_tasks_menu">
                   <div className="tasks_filters">
-                    <div className={classNames("filter_item", {active: activeFilter == 0})} onClick={() => setActiveFilter(0)}>
+                    <div className={classNames("filter_item", {active: activeFilter === 0})} onClick={() => setActiveFilter(0)}>
                       Все
                     </div>
-                    <div className={classNames("filter_item", {active: activeFilter == 1})} onClick={() => setActiveFilter(1)}>
+                    <div className={classNames("filter_item", {active: activeFilter === 1})} onClick={() => setActiveFilter(1)}>
                       Предстоящие
                     </div>
                   </div>
@@ -135,7 +161,7 @@ export default () => {
                 
                 </div>
                 {
-                  tasks.length == 0 ?
+                  tasks.length === 0 ?
                   <div className="nonTasksLabel">Заданий пока нет...</div>
                   :
                   <></>
@@ -148,7 +174,53 @@ export default () => {
               </div>
               :
               <div style={{textAlign: "center", color: "var(--tg-theme-text-color)", fontSize: "18px", marginTop:"20px"}} className="file_manager_page">
-                Файловый менеджер жестко разрабатывается...
+                <div className="file_manager__header">
+                  <div className="file_manager_side">
+                    <div className="goto_parent_folder__button" onClick={ () => {
+                      if (!!curFolder.parent) {
+                        getFolder(curFolder.parent)
+                      }
+                    } } >
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 6L4 12M4 12L10 18M4 12H19" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <div className="cur_folder_name"> {curFolder.name} </div>
+                  </div>
+                  { user.permissions > 1 ?
+                    <button className="add_folder__button" onClick={() => setNewElementPopup(true)}>
+                      <div className="add_folder__text">Добавить</div>
+                        <div className="add_folder__icon">
+                        <div className="create_new_task_icon">
+                          <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.5 3.75L7.5 11.25" strokeWidth="2" strokeLinecap="round"/>
+                            <path d="M11.25 7.5L3.75 7.5" strokeWidth="2" strokeLinecap="round"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </button>
+                    :
+                    <></>  
+                  }
+                </div>
+
+                { 
+                  curFolder?.folders?.length === 0 && curFolder?.files?.length === 0 ?
+                    <div className="file_manager_empty_text">В папке "{curFolder.name}" пока нет файлов...</div>
+                  :
+                  <div className="file_manager__container">
+                  {
+                    curFolder?.folders?.sort((a, b) => a.name.localeCompare(b.name)).map(el => {
+                      return <Folder el={el} key={el._id} curFolder={curFolder} getFolder={getFolder} />
+                    })
+                  }
+                  {
+                    curFolder?.files?.sort((a, b) => a.name.localeCompare(b.name)).map(el => {
+                      return <FM_File key={el._id} el={el} curFolder={curFolder} getFolder={getFolder} />
+                    })
+                  }
+                </div>
+                }
               </div>
           }
 

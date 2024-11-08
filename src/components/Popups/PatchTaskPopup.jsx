@@ -1,4 +1,4 @@
-import Popup from "../Popup/Popup"
+import Popup from "../Popup/Popup.jsx"
 import { useEffect, useState } from "react"
 import classNames from "classnames"
 import axios from "../../utils/axios.js"
@@ -54,7 +54,7 @@ export default ({ isActive, setActive, task }) => {
                     const formData = new FormData()
                     formData.append('file', file)
                     try {
-                        let fileResponse = await axios.post(`/files/upload_file/${taskResponse.data.task._id}`, formData)
+                        let fileResponse = await axios.post(`/files/upload_file_for_task/${taskResponse.data.task._id}`, formData)
                         patchedTask.files.push({ name: fileResponse.data.file.name, _id: fileResponse.data.file._id })
                     } catch (error) { }
                 }

@@ -1,0 +1,109 @@
+.fm_file__container {
+    padding: 10px;
+    min-width: 200px;
+    border-radius: 10px;
+    min-height: 44px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.fm_file_hueta {
+    display: grid;
+    grid-template-rows: 1fr 0fr;
+    transition: all .3s;
+}
+
+.fm_file__container.sub_menu .fm_file_hueta {
+    grid-template-rows: 0fr 1fr;
+}
+
+.fm_file__container:hover .fm_file_icon svg path {
+    filter: brightness(70%);
+}
+
+.fm_file_icon {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+}
+
+.fm_file_icon {
+    padding: 2px;
+}
+
+.fm_file_icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.fm_file_icon svg path {
+    fill: var(--tg-theme-hint-color);
+    transition: all .3s;
+}
+
+.fm_file_name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 15px;
+    color: var(--tg-theme-text-color);
+}
+
+.fm_file_side {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.file_settings__button {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+
+.file_settings__button svg {
+    width: 100%;
+    height: 100%;
+}
+
+.file_settings__button svg circle {
+    fill: var(--tg-theme-hint-color);
+    transition: all .3s;
+}
+
+.file_settings__button:hover svg circle {
+    fill: var(--tg-theme-button-color)
+}
+
+.fm_file_loader__container {
+    width: 24px;
+    height: 24px;
+    padding: 3px;
+}
+
+.fm_file_loader {
+    width: 100%;
+    height: 100%;
+    border: 3px solid var(--tg-theme-accent-text-color);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

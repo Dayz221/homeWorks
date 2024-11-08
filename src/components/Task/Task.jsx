@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import classNames from 'classnames'
 import File from '../File/File.jsx'
-import PatchTaskPopup from '../Popups/PatchTaskPopup.js'
+import PatchTaskPopup from '../Popups/PatchTaskPopup.jsx'
 
 export default ({task}) => {
     const dispatch = useDispatch()
@@ -26,9 +26,7 @@ export default ({task}) => {
 
     const onChangeAction = async (e) => {
         dispatch(setTaskStatus({utask_id: task.utask_id, status: !task.isCompleted}))
-        axios
-            .patch(`/tasks/set_task_status/${task.utask_id}`, { isCompleted: !task.isCompleted })
-            .catch((err) => console.log(err))   
+        setTimeout(() => 2000)  
     }
 
     return (
@@ -39,7 +37,7 @@ export default ({task}) => {
                     <div className="subject_info">
                         <div className="subject_name">{task.subject}</div>
                         <div className='task_data'>
-                            <div className="task_type">{task.type}</div>
+                            { task.type != '' ? <div className="task_type">{task.type}</div> : <></>}
                             <div className="task_deadline">{getDate(task.deadline)}</div>
                         </div>
                     </div>

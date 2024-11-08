@@ -31,7 +31,7 @@ export default ({task_id, file, editMode}) => {
     const _deleteFile = () => {
         if (window.confirm(`Вы точно уверены, что хотите удалить файл ${file.name}?`)) {
             axios
-                .delete(`/files/delete_file/${file._id}`)
+                .delete(`/files/unpin_file/${task_id}/${file._id}`)
                 .then(res => {
                     dispatch(deleteFile({task_id, file_id: file._id}))
                 })
@@ -44,7 +44,7 @@ export default ({task_id, file, editMode}) => {
             <div className="file_name">{file.name}</div>
             { isLoading ?
                 <div className="file_loader__container">
-                    <span class="file_loader"></span>
+                    <span className="file_loader"></span>
                 </div>
                 :
                 editMode ? 
