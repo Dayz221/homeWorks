@@ -1,7 +1,7 @@
 .body_container {
     max-width: 820px;
     width: 100%;
-    padding: 25px 10px;
+    padding: 15px 10px;
     margin: 0 auto;
 }
 
@@ -111,6 +111,11 @@
     color: var(--tg-theme-hint-color);
 }
 
+input::placeholder {
+    color: var(--tg-theme-hint-color);
+    font-size: 16px;
+}
+
 .render_type {
     display: flex;
     justify-content: center;
@@ -136,9 +141,9 @@
     margin-top: 15px;
 }
 
-.all_tasks_page {
+/* .all_tasks_page {
     margin: 0 10px;
-}
+} */
 
 .all_tasks_menu {
     display: flex;
@@ -147,7 +152,8 @@
     margin-top: 20px;
 }
 
-.create_new_task_button {
+.create_new_task_button,
+.add_folder__button {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -158,37 +164,56 @@
     border: 2px solid var(--tg-theme-button-color);
 }
 
-.create_new_task_text {
+.create_new_task_text,
+.add_folder__text {
     color: var(--tg-theme-accent-text-color);
     margin-right: 4px;
     transition: all .3s;
+    font-size: 17px;
 }
 
-.create_new_task_icon {
+.create_new_task_icon,
+.add_folder__icon {
     width: 20px;
     height: 20px;
 }
 
-.create_new_task_icon svg {
+.create_new_task_icon svg,
+.add_folder__icon svg {
     width: 100%;
     height: 100%;
 }
 
-.create_new_task_icon svg path {
+.create_new_task_icon svg path,
+.add_folder__icon svg path {
     stroke: var(--tg-theme-accent-text-color);
     transition: all .3s;
 }
 
-.create_new_task_button:hover {
+.create_new_task_button:hover,
+.add_folder__button:hover {
     background-color: var(--tg-theme-button-color);
 }
 
-.create_new_task_button:hover .create_new_task_text {
+.create_new_task_button:hover .create_new_task_text,
+.add_folder__button:hover .add_folder__text {
     color: var(--tg-theme-button-text-color);
 }
 
-.create_new_task_button:hover svg path {
+.create_new_task_button:hover svg path,
+.add_folder__button:hover svg path {
     stroke: var(--tg-theme-button-text-color);
+}
+
+@media screen and (width < 400px) {
+    .create_new_task_text,
+    .add_folder__text {
+        display: none;
+    }
+    .create_new_task_button,
+    .add_folder__button {
+        padding: 5px;
+    }
 }
 
 .input,
@@ -405,7 +430,6 @@ input[type="file"]+label:hover {
     border-radius: 15px;
     background-color: transparent;
     border: 2px solid transparent;
-    transition: all .3s;
     cursor: pointer;
     color: var(--tg-theme-text-color);
     font-size: 15px;
@@ -413,5 +437,101 @@ input[type="file"]+label:hover {
 
 .filter_item.active {
     border-color: var(--tg-theme-button-color);
-    color: var(--tg-theme-accent-text-color)
+    color: var(--tg-theme-accent-text-color);
+    transition: border-color .3s, color .3s;
+}
+
+.file_manager__container {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+}
+
+.file_manager_empty_text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--tg-theme-hint-color);
+}
+
+.goto_parent_folder__button {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.goto_parent_folder__button svg {
+    width: 100%;
+    height: 100%;
+}
+
+.goto_parent_folder__button svg path {
+    stroke: var(--tg-theme-hint-color);
+    transition: all .3s;
+}
+
+.goto_parent_folder__button:hover svg path {
+    stroke: var(--tg-theme-button-color);
+}
+
+.file_manager_side {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    overflow: hidden;
+    padding: 10px 15px 10px 12px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 15px;
+}
+
+.file_manager__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cur_folder_name {
+    font-size: 16px;
+    color: var(--tg-theme-text-color);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.type_selector {
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all .3s;
+    border-color: var(--tg-theme-button-color);
+    display: grid;
+    grid-template-rows: 1fr 0fr;
+    width: 80px;
+    margin-right: 10px;
+}
+
+.type_selector.active {
+    grid-template-rows: 0fr 1fr;
+}
+
+.type_item {
+    color: var(--tg-theme-accent-text-color);
+    font-size: 16px;
+    font-weight: 400;
+    transition: all .3s;
+    min-width: 0;
+    text-align: center;
+    overflow: hidden;
+}
+
+.add_element__container {
+    display: grid;
+    grid-template-columns: max-content auto;
+    margin-bottom: 10px;
+}
+
+#fm__folder_name {
+    margin: 0;
 }

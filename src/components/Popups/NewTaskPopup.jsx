@@ -1,4 +1,4 @@
-import Popup from "../Popup/Popup"
+import Popup from "../Popup/Popup.jsx"
 import { useEffect, useState } from "react"
 import classNames from "classnames"
 import axios from "../../utils/axios.js"
@@ -23,15 +23,17 @@ export default ({ isActive, setActive }) => {
     })
 
     useEffect(() => {
-        setNewTaskData({
-            subject: "",
-            type: "",
-            description: "",
-            deadline: Math.floor((new Date().getTime() + 7 * oneDayInMillis) / oneDayInMillis) * oneDayInMillis,
-            isGroupTask: user.permissions > 1,
-            files: []
-        })
-        setIsDisabled(false)
+        if (isActive) {
+            setNewTaskData({
+                subject: "",
+                type: "",
+                description: "",
+                deadline: Math.floor((new Date().getTime() + 7 * oneDayInMillis) / oneDayInMillis) * oneDayInMillis,
+                isGroupTask: user.permissions > 1,
+                files: []
+            })
+            setIsDisabled(false)
+        }
     }, [isActive])
 
     useEffect(() => setIsErr(false), [newTaskData])
@@ -54,12 +56,13 @@ export default ({ isActive, setActive }) => {
             try {
                 const taskResponse = await axios.post('/tasks/create_task', taskData)
                 let newTask = taskResponse.data.task
+                console.log(newTask)
             
                 for (const file of files) {
                     const formData = new FormData()
                     formData.append('file', file)
                     try {
-                        const fileResponse = await axios.post(`/files/upload_file/${taskResponse.data.task._id}`, formData)
+                        const fileResponse = await axios.post(`/files/upload_file_for_task/${newTask._id}`, formData)
                         newTask.files.push({name: fileResponse.data.file.name, _id: fileResponse.data.file._id})
                     } catch (error) { 
                     }
