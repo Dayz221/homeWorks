@@ -44,13 +44,16 @@ export default ({el, curFolder, getFolder}) => {
                 <></>
               }
             </div>
-            <div className="folder_settings__button" onClick={e => {e.stopPropagation(); setIsOpened(prev => !prev)}}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="3" r="3"/>
-                <circle cx="12" cy="21" r="3"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </div>
+            { user.permissions > 1 ?
+              <div className="folder_settings__button" onClick={e => {e.stopPropagation(); setIsOpened(prev => !prev)}}>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="3" r="3"/>
+                  <circle cx="12" cy="21" r="3"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </div>
+              :<></>  
+            }
           </div>
         </>
       )
