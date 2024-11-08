@@ -21,10 +21,6 @@
     pointer-events: all;
 }
 
-.popup_childrens {
-    
-}
-
 .popup__container {
     z-index: 4;
     padding: 20px;
