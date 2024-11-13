@@ -2,7 +2,7 @@ import axios from '../../utils/axios.js'
 import { setTaskStatus } from '../../redux/slice'
 import './Task.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import classNames from 'classnames'
 import File from '../File/File.jsx'
 import PatchTaskPopup from '../Popups/PatchTaskPopup.jsx'
@@ -24,10 +24,22 @@ export default ({task}) => {
         return `${day}.${month}.${year}`
     }
 
-    const onChangeAction = async (e) => {
-        dispatch(setTaskStatus({utask_id: task.utask_id, status: !task.isCompleted}))
-        setTimeout(() => 2000)  
-    }
+    const [timeoutId, setTimeoutId] = useState(null);
+  
+    const onChangeAction = useCallback((event) => {
+      dispatch(setTaskStatus({utask_id: task.utask_id, status: event.target.checked}))
+
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+
+      const newTimeoutId = setTimeout(() => {
+        axios
+            .patch(`/tasks/set_task_status/${task.utask_id}`, { isCompleted: event.target.checked })
+            .catch(() => {})
+      }, 1000)
+      setTimeoutId(newTimeoutId)
+    }, [timeoutId])
 
     return (
         <>
